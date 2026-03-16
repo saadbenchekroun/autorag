@@ -7,7 +7,7 @@ name = "autorag-architect"
 version = "0.1.0"
 description = "Autonomous RAG System Architect & Pipeline Engine"
 authors = [
-    {name = "AI Engineer", email = "engineer@example.com"}
+    {name = "Saad benchekroun", email = "saadbenchekroun4@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.10"
