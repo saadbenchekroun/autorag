@@ -1,0 +1,25 @@
+# Model Configurations
+
+llm:
+  # Providers supported: openai, gemini, anthropic, deepseek, groq, openrouter, mistral
+  default_provider: "openai"
+  models:
+    openai: "gpt-4o"
+    gemini: "gemini/gemini-1.5-pro"
+    anthropic: "claude-3-5-sonnet-20240620"
+    deepseek: "deepseek/deepseek-chat"
+    groq: "groq/llama-3.1-70b-versatile"
+    openrouter: "openrouter/google/gemini-pro-1.5"
+    mistral: "mistral/mistral-large-latest"
+
+embedding:
+  # Models supported natively via API or HuggingFace locally
+  cloud_small: "openai_text_embedding_3_small"
+  cloud_large: "openai_text_embedding_3_large"
+  local_fast: "sentence_transformers_minilm"
+  local_accurate: "huggingface_bge"
+
+vector_store:
+  # Supported: pinecone, weaviate, milvus, qdrant, chroma, pgvector, elasticsearch
+  default_local: "chroma"
+  default_cloud: "pinecone"

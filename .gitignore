@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Data and Cache
+uploads/
+chroma_db/
+.autorag_cache/
+*.sqlite3
+data_sample/
+
+# Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+
+# Build files
+dist/
+build/
+*.egg-info/

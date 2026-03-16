@@ -1,0 +1,48 @@
+# Pipeline Configurations
+
+ingestion:
+  supported_extensions:
+    - ".pdf"
+    - ".docx"
+    - ".txt"
+    - ".md"
+    - ".py"
+    - ".js"
+    - ".ts"
+    - ".java"
+    - ".cpp"
+  
+  directories:
+    upload_base_dir: "uploads"
+    chroma_db_dir: "chroma_db"
+
+chunking:
+  strategies:
+    - "fixed_size"
+    - "sliding_window"
+    - "semantic"
+    - "paragraph"
+    - "recursive_hierarchical"
+    - "structure_aware"
+    - "code_aware"
+
+  defaults:
+    fixed_size:
+      size: 1500
+      overlap: 150
+    semantic:
+      size: 512
+      overlap: 50
+    code_aware:
+      size: 1000
+      overlap: 200
+    sliding_window:
+      size: 1024
+      overlap: 256
+
+decision_engine:
+  thresholds:
+    local_max_tokens: 1000000
+    high_density_ratio: 0.5
+    metadata_heavy_count: 5
+    cloud_ultra_scale: 100000000
