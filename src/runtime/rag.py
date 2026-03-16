@@ -1,60 +1,44 @@
 import os
-from typing import Any, Dict
+from typing import Any
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
 
 from src.core.config import config
+from src.core.exceptions import RetrievalError
+from src.core.logging import get_logger
+from src.core.schemas import ArchitectureDecision, ContextChunk, QueryMetrics, QueryResponse
+from src.services.embedding_registry import get_embedding_function
+
+logger = get_logger(__name__)
+
+_DEFAULT_RETRIEVAL_K = int(os.getenv("RETRIEVAL_K", "3"))
 
 
 class RAGRuntimeSystem:
-    """Production runtime handling vector retrieval and language model generation."""
-
-    def __init__(self) -> None:
-        self.embeddings_cache: Dict[str, Any] = {}
-
-    def _get_embedding_function(self, model_choice: str) -> Any:
-        """Loads and caches required embedding model."""
-        if model_choice not in self.embeddings_cache:
-            if "openai" in model_choice:
-                api_key = os.getenv("OPENAI_API_KEY")
-                if api_key:
-                    model_name = (
-                        "text-embedding-3-small"
-                        if "small" in model_choice
-                        else "text-embedding-3-large"
-                    )
-                    self.embeddings_cache[model_choice] = OpenAIEmbeddings(model=model_name)
-                    return self.embeddings_cache[model_choice]
-                else:
-                    model_choice = "huggingface_bge"  # fallback
-
-            if "minilm" in model_choice or model_choice == "huggingface_minilm":
-                model_name = "sentence-transformers/all-MiniLM-L6-v2"
-            elif "e5" in model_choice or "gte" in model_choice or "instructor" in model_choice:
-                model_name = "BAAI/bge-small-en-v1.5"
-            else:
-                model_name = "BAAI/bge-small-en-v1.5"
-            self.embeddings_cache[model_choice] = HuggingFaceEmbeddings(model_name=model_name)
-        return self.embeddings_cache[model_choice]
+    """Production runtime handling vector retrieval and language-model generation."""
 
     def generate_response(
-        self, project_id: str, query_text: str, architecture_decision: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """
-        Executes the actual local RAG generation loop using LangChain LCEL.
+        self,
+        project_id: str,
+        query_text: str,
+        architecture_decision: ArchitectureDecision,
+        k: int = _DEFAULT_RETRIEVAL_K,
+    ) -> QueryResponse | dict[str, Any]:
+        """Execute the RAG generation loop for *query_text* over *project_id*.
 
         Args:
-            project_id: Deployment ID
-            query_text: User question
-            architecture_decision: Pipeline configuration dict
+            project_id: Deployment UUID referencing the indexed vector store.
+            query_text: Natural-language user question.
+            architecture_decision: Pipeline configuration used during indexing.
+            k: Number of context chunks to retrieve (default: ``RETRIEVAL_K`` env var, 3).
 
         Returns:
-            Dict context and text.
+            A :class:`QueryResponse` on success, or a plain error dict if the
+            vector store is missing (so the API can return 404).
         """
         persist_dir = os.path.join(
             os.getcwd(),
@@ -63,48 +47,55 @@ class RAGRuntimeSystem:
         )
         if not os.path.exists(persist_dir):
             return {
-                "error": "Vector database not found for this project. Please index documents first."
+                "error": (
+                    f"Vector database not found for project '{project_id}'. "
+                    "Ensure indexing has completed before querying."
+                )
             }
 
-        # 1. Load Embeddings and VectorStore
-        embedding_model_choice = architecture_decision.get("embedding_model", "huggingface_minilm")
-        embedding_function = self._get_embedding_function(embedding_model_choice)
-
+        # --- 1. Load embedding function and vector store ---
+        embedding_function = get_embedding_function(architecture_decision.embedding_model)
         vectorstore = Chroma(persist_directory=persist_dir, embedding_function=embedding_function)
-        retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+        retriever = vectorstore.as_retriever(search_kwargs={"k": k})
 
-        # 2. Retrieve Context
+        # --- 2. Retrieve context chunks ---
         try:
             docs = retriever.invoke(query_text)
-            context_text = "\n\n".join([doc.page_content for doc in docs])
-            context_used = [
-                {
-                    "text": doc.page_content[:200] + "...",
-                    "source": doc.metadata.get("source", "unknown"),
-                }
-                for doc in docs
-            ]
-        except Exception as e:
-            return {"error": f"Failed to retrieve context: {str(e)}"}
+        except Exception as exc:
+            raise RetrievalError(
+                f"Failed to retrieve context for project '{project_id}': {exc}"
+            ) from exc
 
-        # 3. LLM Generation
-        # Fallback to pure retrieval mode if OpenAI Key is absent to keep it working without external apis
+        context_text = "\n\n".join(doc.page_content for doc in docs)
+        context_used = [
+            ContextChunk(
+                text=doc.page_content[:200] + ("..." if len(doc.page_content) > 200 else ""),
+                source=doc.metadata.get("source", "unknown"),
+            )
+            for doc in docs
+        ]
+
+        # --- 3. LLM generation (falls back to retrieval-only if no API key) ---
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
-            answer = (
-                "API Key not found. Displaying retrieved context answering your query:\n\n"
-                + context_text
+            logger.warning(
+                "openai_key_missing_retrieval_only",
+                project_id=project_id,
+                chunks=len(docs),
             )
+            answer = (
+                "OpenAI API key not configured. Displaying retrieved context:\n\n" + context_text
+            )
+            generation_mode = "retrieval_only"
         else:
-            llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
-            template = """Answer the question based only on the following context:
-{context}
-
-Question: {question}
-
-Answer:"""
+            llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, api_key=api_key)
+            template = (
+                "Answer the question based only on the following context:\n"
+                "{context}\n\n"
+                "Question: {question}\n\n"
+                "Answer:"
+            )
             prompt = ChatPromptTemplate.from_template(template)
-
             chain = (
                 {"context": retriever, "question": RunnablePassthrough()}
                 | prompt
@@ -112,15 +103,23 @@ Answer:"""
                 | StrOutputParser()
             )
             answer = chain.invoke(query_text)
+            generation_mode = "openai"
 
-        return {
-            "answer": answer,
-            "context_used": context_used,
-            "metrics": {
-                "chunks_retrieved": len(docs),
-                "generation_mode": "OpenAI" if api_key else "Retrieval-Only Fallback",
-            },
-        }
+        logger.info(
+            "rag_response_generated",
+            project_id=project_id,
+            chunks_retrieved=len(docs),
+            mode=generation_mode,
+        )
+
+        return QueryResponse(
+            answer=answer,
+            context_used=context_used,
+            metrics=QueryMetrics(
+                chunks_retrieved=len(docs),
+                generation_mode=generation_mode,
+            ),
+        )
 
 
 rag_runtime = RAGRuntimeSystem()

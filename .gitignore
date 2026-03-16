@@ -1,35 +1,64 @@
-# Byte-compiled / optimized / DLL files
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyo
 
 # Virtual environments
 venv/
+.venv/
 env/
+.env/
+
+# Environment variables
 .env
 
-# Data and Cache
-uploads/
-chroma_db/
-.autorag_cache/
-*.sqlite3
-data_sample/
-
-# Notebooks
-.ipynb_checkpoints
-*.ipynb
-
-# Frontend
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-
-# IDE and OS
-.vscode/
-.idea/
-.DS_Store
-
-# Build files
+# Build / distribution
+*.egg-info/
 dist/
 build/
-*.egg-info/
+*.egg
+.eggs/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.coveragerc
+
+# Type checking
+.mypy_cache/
+
+# Linting
+.ruff_cache/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Runtime artifacts (NEVER commit these)
+chroma_db/
+uploads/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / frontend
+node_modules/
+.next/
+frontend/.next/
+frontend/node_modules/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MLflow
+mlruns/

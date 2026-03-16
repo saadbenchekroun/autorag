@@ -1,0 +1,11 @@
+This is a plain text fixture file used in unit tests.
+
+It contains multiple paragraphs to exercise paragraph-based metrics.
+
+The quick brown fox jumps over the lazy dog.
+Python is a great language for data engineering.
+
+def example_function():
+    return "hello world"
+
+This paragraph should trigger code detection heuristics.

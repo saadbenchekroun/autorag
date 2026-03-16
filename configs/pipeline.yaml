@@ -6,6 +6,9 @@ ingestion:
     - ".docx"
     - ".txt"
     - ".md"
+    - ".html"
+    - ".csv"
+    - ".json"
     - ".py"
     - ".js"
     - ".ts"
@@ -39,10 +42,17 @@ chunking:
     sliding_window:
       size: 1024
       overlap: 256
+    recursive_hierarchical:
+      size: 1500
+      overlap: 150
 
 decision_engine:
   thresholds:
-    local_max_tokens: 1000000
-    high_density_ratio: 0.5
-    metadata_heavy_count: 5
+    # Token count above which local Qdrant is preferred over Chroma
+    local_max_tokens: 50000000
+    # Token count above which Milvus is preferred for cloud deployments
     cloud_ultra_scale: 100000000
+    # Number of metadata keys to consider a document "metadata heavy"
+    metadata_heavy_count: 5
+    # Ratio of high-density documents to trigger semantic chunking
+    high_density_ratio: 0.5
