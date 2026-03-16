@@ -56,7 +56,7 @@ export default function UploadDataset() {
         method: "POST",
         body: formData,
       });
-      
+
       if (!response.ok) {
         throw new Error(`Upload failed: ${response.statusText}`);
       }
@@ -84,7 +84,7 @@ export default function UploadDataset() {
               <p className="text-zinc-500 font-light mt-1">Indexing optimized pipeline in the background using auto-detected settings.</p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
             <div className="bg-zinc-50/50 p-5 rounded-2xl border border-zinc-100">
                <span className="block text-xs text-zinc-400 uppercase tracking-widest font-medium mb-2">Vector Store</span>
@@ -110,15 +110,15 @@ export default function UploadDataset() {
             <div className="space-y-3">
               {arch?.reasoning.map((r: string, i: number) => (
                 <div key={i} className="flex gap-4 p-4 rounded-xl bg-zinc-50/50 border border-zinc-100">
-                  <span className="text-zinc-400 mt-0.5 shrink-0 opacity-50">0{i+1}</span> 
+                  <span className="text-zinc-400 mt-0.5 shrink-0 opacity-50">0{i+1}</span>
                   <span className="text-zinc-600 font-light leading-relaxed">{r}</span>
                 </div>
               ))}
             </div>
           </div>
-          
+
           <div className="flex justify-end pt-6 border-t border-zinc-100">
-            <button 
+            <button
               onClick={() => {setResult(null); setFiles([])}}
               className="px-6 py-2.5 bg-zinc-900 hover:bg-black text-white text-sm font-medium rounded-xl transition-all shadow-sm">
               Build Another Pipeline
@@ -131,24 +131,24 @@ export default function UploadDataset() {
 
   return (
     <div className="w-full mx-auto">
-      <div 
+      <div
         className={`border-2 border-dashed rounded-[2rem] p-16 text-center transition-all duration-500 relative overflow-hidden backdrop-blur-sm ${
-          isDragging 
-            ? 'border-zinc-900 bg-zinc-50 scale-[1.01]' 
+          isDragging
+            ? 'border-zinc-900 bg-zinc-50 scale-[1.01]'
             : 'border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <input 
-          type="file" 
-          multiple 
-          ref={fileInputRef} 
-          className="hidden" 
-          onChange={handleFileSelect} 
+        <input
+          type="file"
+          multiple
+          ref={fileInputRef}
+          className="hidden"
+          onChange={handleFileSelect}
         />
-        
+
         <div className="w-20 h-20 mx-auto bg-zinc-50 rounded-2xl flex items-center justify-center mb-6 border border-zinc-100 relative">
           {uploading ? (
             <div className="w-8 h-8 border-[3px] border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
@@ -158,14 +158,14 @@ export default function UploadDataset() {
             </svg>
           )}
         </div>
-        
+
         <h3 className="text-2xl font-medium mb-3 text-zinc-900 tracking-tight">Dataset Ingestion</h3>
         <p className="text-zinc-500 font-light mb-10 max-w-md mx-auto leading-relaxed">
           {uploading ? "Analyzing document semantics and building vector infrastructure..." : "Upload PDFs, Markdown, Word docs, or zip files. We handle parsing, chunking, and embedding."}
         </p>
-        
+
         {!uploading && (
-           <button 
+           <button
              onClick={() => fileInputRef.current?.click()}
              className="px-8 py-3 bg-zinc-900 text-white text-sm font-medium rounded-xl hover:bg-black transition-all shadow-md shadow-zinc-900/10 active:scale-95"
            >
@@ -198,7 +198,7 @@ export default function UploadDataset() {
                 </li>
               )}
             </ul>
-            <button 
+            <button
               onClick={handleUpload}
               className="w-full mt-8 py-3.5 bg-zinc-900 hover:bg-black text-white text-sm font-medium rounded-xl transition-all shadow-md shadow-zinc-900/10 flex items-center justify-center gap-2">
               Generate RAG Pipeline

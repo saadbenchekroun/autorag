@@ -45,11 +45,11 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[100] animate-in fade-in duration-300"
         onClick={onClose}
       />
-      
+
       {/* Drawer */}
       <div className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white z-[101] shadow-2xl border-l border-zinc-100 p-10 flex flex-col animate-in slide-in-from-right duration-500 ease-out">
         <div className="flex items-center justify-between mb-12">
@@ -57,7 +57,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
             <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Infrastructure Keys</h2>
             <p className="text-sm text-zinc-500 font-light mt-1">Configure your cloud intelligence providers.</p>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="w-10 h-10 rounded-full hover:bg-zinc-50 flex items-center justify-center transition-colors text-zinc-400 hover:text-zinc-900"
           >
@@ -70,7 +70,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
           <div className="space-y-4">
             <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Architecture Intelligence (LLM)</label>
             <div className="space-y-3">
-              <select 
+              <select
                 value={keys.llm_provider}
                 onChange={(e) => setKeys({...keys, llm_provider: e.target.value})}
                 className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all"
@@ -82,7 +82,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
                 <option value="groq">Groq (Llama 3.1)</option>
                 <option value="openrouter">OpenRouter (Any Model)</option>
               </select>
-              <input 
+              <input
                 type="password"
                 placeholder="Enter API Key"
                 value={keys.llm_key}
@@ -99,7 +99,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
           <div className="space-y-4">
             <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Vector Store API (Cloud)</label>
             <div className="space-y-3">
-              <select 
+              <select
                 value={keys.vector_db_provider}
                 onChange={(e) => setKeys({...keys, vector_db_provider: e.target.value})}
                 className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all"
@@ -112,7 +112,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
                 <option value="pgvector">PGVector</option>
                 <option value="elasticsearch">Elasticsearch</option>
               </select>
-              <input 
+              <input
                 type="password"
                 placeholder="Enter Vector DB Key"
                 value={keys.vector_db_key}
@@ -126,7 +126,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
           <div className="space-y-4">
             <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Embeddings API (Optional)</label>
             <div className="space-y-3">
-              <select 
+              <select
                 value={keys.embedding_provider}
                 onChange={(e) => setKeys({...keys, embedding_provider: e.target.value})}
                 className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all"
@@ -137,7 +137,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
                 <option value="voyage">Voyage AI</option>
                 <option value="huggingface">HuggingFace Enterprise</option>
               </select>
-              <input 
+              <input
                 type="password"
                 placeholder="Enter Embeddings Key"
                 value={keys.embedding_key}
@@ -149,7 +149,7 @@ export default function ApiKeysDrawer({ isOpen, onClose }: { isOpen: boolean, on
         </div>
 
         <div className="mt-10 pt-8 border-t border-zinc-100">
-          <button 
+          <button
             onClick={handleSave}
             className={`w-full py-4 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${saved ? 'bg-emerald-500 text-white shadow-emerald-500/20 shadow-lg' : 'bg-zinc-900 text-white hover:bg-black shadow-zinc-900/20 shadow-lg active:scale-[0.98]'}`}
           >

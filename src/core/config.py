@@ -1,27 +1,31 @@
 import os
-import yaml
 from typing import Any, Dict, Optional
+
+import yaml
 from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AutoRAG Architect"
     VERSION: str = "0.1.0"
     API_V1_STR: str = "/api/v1"
-    
+
     # Metadata DB
     DATABASE_URL: str = "sqlite:///./autorag.db"
-    
+
     # Redis/Celery
     REDIS_URL: str = "redis://localhost:6379/0"
-    
+
     class Config:
         case_sensitive = True
 
+
 settings = Settings()
+
 
 class ConfigLoader:
     """Centralized configuration loader for YAML resource files."""
-    
+
     def __init__(self, config_dir: str = "configs"):
         self.config_dir = os.path.join(os.getcwd(), config_dir)
         self._configs: Dict[str, Any] = {}
@@ -54,6 +58,7 @@ class ConfigLoader:
             else:
                 return default
         return current
+
 
 # Global configuration instance for YAML files
 config = ConfigLoader()

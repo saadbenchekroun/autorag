@@ -11,7 +11,7 @@ ingestion:
     - ".ts"
     - ".java"
     - ".cpp"
-  
+
   directories:
     upload_base_dir: "uploads"
     chroma_db_dir: "chroma_db"

@@ -57,15 +57,15 @@ export default function DeploymentsList() {
                 <p className="text-sm text-zinc-500 font-light mt-1">{new Date(proj.created_at * 1000).toLocaleString()}</p>
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={() => setActivePlayground(activePlayground === proj.project_id ? null : proj.project_id)}
               className={`px-5 py-2 rounded-xl text-sm font-medium transition-all ${activePlayground === proj.project_id ? 'bg-zinc-900 text-white' : 'bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50'}`}
             >
               {activePlayground === proj.project_id ? 'Close Playground' : 'Query Playground'}
             </button>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
               <span className="block text-[11px] text-zinc-400 uppercase tracking-widest font-semibold mb-1">Documents</span>
@@ -86,7 +86,7 @@ export default function DeploymentsList() {
               </span>
             </div>
           </div>
-          
+
           {activePlayground === proj.project_id && (
             <div className="mt-8 pt-8 border-t border-zinc-100 animate-in fade-in slide-in-from-top-4 duration-500">
               <Playground project={proj} />

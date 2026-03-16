@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-200">
-      
+
       <ApiKeysDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
 
       {/* Premium Navbar */}
@@ -22,7 +22,7 @@ export default function Home() {
           </div>
           <div className="flex gap-8">
             <button className="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Documentation</button>
-            <button 
+            <button
               onClick={() => setIsDrawerOpen(true)}
               className="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
             >
@@ -56,7 +56,7 @@ export default function Home() {
               <p className="text-sm text-zinc-500 font-light">Your actively running retrieval pipelines.</p>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-zinc-100">
             <DeploymentsList />
           </div>

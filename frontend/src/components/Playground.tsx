@@ -11,7 +11,7 @@ export default function Playground({ project }: { project: any }) {
   const handleQuery = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    
+
     setRunning(true);
     setError(null);
     setResponse(null);
@@ -25,14 +25,14 @@ export default function Playground({ project }: { project: any }) {
           architecture: project.architecture
         }),
       });
-      
+
       if (!res.ok) {
         throw new Error(`Query failed: ${res.statusText}`);
       }
 
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      
+
       setResponse(data);
     } catch (err: any) {
       setError(err.message || "An error occurred.");
@@ -44,15 +44,15 @@ export default function Playground({ project }: { project: any }) {
   return (
     <div className="mt-8 pt-8">
       <form onSubmit={handleQuery} className="flex gap-3 mb-8">
-        <input 
-          type="text" 
+        <input
+          type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Ask a question against your ${project.documents_indexed} documents...`}
           className="flex-1 bg-white border border-zinc-200 rounded-xl px-5 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 transition-all shadow-sm"
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={running}
           className="px-8 py-3 bg-zinc-900 hover:bg-black disabled:opacity-50 text-white font-medium rounded-xl transition-all shadow-md shadow-zinc-900/10 flex items-center justify-center shrink-0 min-w-[120px]"
         >
@@ -83,7 +83,7 @@ export default function Playground({ project }: { project: any }) {
               Generated via: {response.metrics?.generation_mode}
             </div>
           </div>
-          
+
           <div className="pt-8 border-t border-zinc-100">
             <h4 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-6">Retrieved Context ({response.metrics?.chunks_retrieved} Vectors)</h4>
             <div className="grid gap-4">
