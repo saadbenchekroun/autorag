@@ -5,6 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/charliermarsh/ruff-pre-commit)
 
+<img width="1919" height="956" alt="image" src="https://github.com/user-attachments/assets/5e42cc6b-e50a-45a8-9bb8-2665ec5e24b7" />
+
+
 **AutoRAG Architect** analyses your document corpus and automatically designs, provisions, and serves the most optimal RAG (Retrieval-Augmented Generation) pipeline for it — selecting the right vector database, chunking strategy, embedding model, and LLM, then indexing your data and answering queries.
 
 ---
