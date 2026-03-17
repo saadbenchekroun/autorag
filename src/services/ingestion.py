@@ -54,8 +54,7 @@ class DocumentIngestionService:
         ext = os.path.splitext(file_path)[1].lower()
         if ext not in self.supported_extensions:
             raise UnsupportedFileTypeError(
-                f"Unsupported file type '{ext}'. "
-                f"Supported: {', '.join(self.supported_extensions)}"
+                f"Unsupported file type '{ext}'. Supported: {', '.join(self.supported_extensions)}"
             )
 
         raw_text = self._extract_text(file_path, ext)
