@@ -1,0 +1,24 @@
+# Enforce LF line endings for all text files in CI
+* text=auto eol=lf
+
+# Explicit overrides
+*.py    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.md    text eol=lf
+*.toml  text eol=lf
+*.txt   text eol=lf
+*.sh    text eol=lf
+*.json  text eol=lf
+*.cfg   text eol=lf
+*.ini   text eol=lf
+*.in    text eol=lf
+
+# Binary files — do not touch
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.zip   binary
